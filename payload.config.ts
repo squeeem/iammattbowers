@@ -4,7 +4,10 @@ import { buildConfig } from "payload";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
-import sharp from "sharp";
+// Sharp is optional for image optimization. Commented out because Vercel Blob
+// handles CDN + optimization, and Sharp's native bindings aren't available in
+// Vercel's build environment (linux-x64 libvips). Admin image uploads still work.
+// import sharp from "sharp";
 
 import { Users } from "./payload/collections/Users";
 import { Media } from "./payload/collections/Media";
@@ -58,7 +61,6 @@ export default buildConfig({
       ssl: { rejectUnauthorized: false },
     },
   }),
-  sharp,
   plugins: [
     vercelBlobStorage({
       enabled: true,
