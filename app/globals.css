@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #f5f1e8; /* warm ivory — default page background */
+  --surface: #fcfaf5; /* near-white warm — cards, elevated panels */
+  --sand: #eae2d2; /* deeper warm sand — alternating section bands */
+  --ink: #1b1a17; /* warm near-black — body text + headlines */
+  --ink-soft: #6e6960; /* warm gray — secondary text, captions, labels */
+  --accent: #c5ed82; /* chartreuse — highlight fills, the garden/Tending pop */
+  --accent-deep: #34503a; /* herbal forest green — primary brand color */
+  --line: #ded6c6; /* hairline borders + dividers */
+
+  /* motion — "noticeable but calm" */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 700ms;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+body {
+  position: relative;
+  font-family: var(--font-body), system-ui, sans-serif;
+  /* §1 editorial numerals + ligatures */
+  font-feature-settings: "kern", "liga", "calt";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* §2 faint paper grain — makes warm ivory read as lived-in paper, not flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  text-wrap: balance; /* §1 no orphans / ragged headlines */
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* §1 inputs use the brand caret */
+input,
+textarea {
+  caret-color: var(--accent-deep);
+}
+
+/* Fraunces italic editorial accent — emphasis words, pillar verbs, pull-quotes.
+   In @layer components so a text-* utility can override the default color. */
+@layer components {
+  .accent-serif {
+    font-family: var(--font-accent), Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent-deep);
+    letter-spacing: -0.015em;
+    font-optical-sizing: auto;
+  }
+
+  /* §1 considered link underline for prose/body links */
+  .u-link {
+    color: var(--accent-deep);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in srgb, var(--accent-deep) 35%, transparent);
+    transition: text-decoration-color 200ms var(--ease-out);
+  }
+  .u-link:hover {
+    text-decoration-color: var(--accent-deep);
+  }
+
+  /* §2 warm photo treatment — unifies any photo into the brand */
+  .photo-warm {
+    filter: saturate(0.92) contrast(1.02) brightness(1.01);
+  }
+  .photo-warm::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent-deep);
+    mix-blend-mode: soft-light;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* keep page content above the grain layer */
+header,
+main,
+footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* §5 skip-to-content link */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  background: var(--accent-deep);
+  color: var(--surface);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 200ms var(--ease-out);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* §3 motion system — only when the user is OK with motion */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* scroll-reveal: hidden until <Reveal> adds .is-visible */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* hero load — orchestrated stagger on direct children */
+  .stagger > * {
+    opacity: 0;
+    animation: fade-up var(--dur) var(--ease-out) forwards;
+  }
+  .stagger > *:nth-child(1) {
+    animation-delay: 80ms;
+  }
+  .stagger > *:nth-child(2) {
+    animation-delay: 180ms;
+  }
+  .stagger > *:nth-child(3) {
+    animation-delay: 300ms;
+  }
+  .stagger > *:nth-child(4) {
+    animation-delay: 420ms;
+  }
+  .stagger > *:nth-child(5) {
+    animation-delay: 540ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .reading-measure {
+    max-width: 68ch;
+  }
+  /* §3 micro-interaction: arrow nudges on hover of the group */
+  .nudge {
+    transition: transform 200ms var(--ease-out);
+  }
+  .group:hover .nudge {
+    transform: translateX(3px);
+  }
+}
