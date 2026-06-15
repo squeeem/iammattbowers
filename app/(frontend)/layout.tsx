@@ -3,6 +3,7 @@ import { Hanken_Grotesk, Fraunces } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { StickyCTA } from "@/components/ui/StickyCTA";
 import "../globals.css";
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -55,6 +56,7 @@ export default function FrontendLayout({
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <StickyCTA />
         <Analytics />
       </body>
     </html>
