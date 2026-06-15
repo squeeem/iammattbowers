@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { PILLAR_ORDER, PILLARS } from "@/lib/pillars";
-import { ESSAYS } from "@/lib/essays";
 import { ButtonLink } from "@/components/ui/Button";
 import { Wordmark } from "./Wordmark";
 
@@ -72,7 +71,6 @@ export function Header() {
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
             {NAV_PILLARS.map((p) => {
               const isOpen = openPillar === p.slug;
-              const recent = ESSAYS.filter((e) => e.pillar === p.slug).slice(0, 3);
               return (
                 <div
                   key={p.slug}
@@ -112,21 +110,9 @@ export function Header() {
                     >
                       <div className="origin-top animate-[fade-up_240ms_var(--ease-out)] rounded-card border border-line bg-surface p-5 shadow-soft">
                         <p className="mb-4 text-sm text-ink-soft">{p.blurb}</p>
-                        <ul className="space-y-1">
-                          {recent.map((e) => (
-                            <li key={e.slug}>
-                              <Link
-                                href={`/essays/${e.slug}`}
-                                className="block rounded-lg px-3 py-2 text-base text-ink transition-colors hover:bg-sand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-                              >
-                                {e.title}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
                         <Link
                           href={p.href}
-                          className="group mt-3 inline-flex items-center gap-1 px-3 text-sm font-semibold text-accent-deep hover:underline"
+                          className="group inline-flex items-center gap-1 px-3 text-sm font-semibold text-accent-deep hover:underline"
                         >
                           All of {p.name}
                           <span className="nudge" aria-hidden>
