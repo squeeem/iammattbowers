@@ -1,7 +1,18 @@
 // Client for Payload's local REST API. Runs during SSG/SSR (server-side only).
 // See payload/collections/* for collection schemas and fields.
 
-const BASE_URL = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || "http://localhost:3000";
+// Construct absolute URL: in production, use the vercel domain from env; in dev, use localhost.
+function getBaseUrl() {
+  if (process.env.NEXT_PUBLIC_PAYLOAD_API_URL) {
+    return process.env.NEXT_PUBLIC_PAYLOAD_API_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
+}
+
+const BASE_URL = getBaseUrl();
 
 interface PayloadResponse<T> {
   docs: T[];
