@@ -2,6 +2,10 @@ import { Metadata } from "next";
 import { getPhotos } from "@/lib/payload";
 import Image from "next/image";
 
+// Fetch data on-demand (not prerendered during build)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Tending",
   description: "A photo record of our family and the space we're making.",

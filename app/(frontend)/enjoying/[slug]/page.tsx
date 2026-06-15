@@ -5,14 +5,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LexicalRenderer } from "@/components/ui/LexicalRenderer";
 
+// Revalidate static pages every hour
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
-  const posts = await getPosts();
-  // Only generate static pages for native posts, not linkposts
-  return posts
-    .filter((post) => post.type !== "linkpost")
-    .map((post) => ({
-      slug: post.slug,
-    }));
+  // Skip static generation during build (no server running).
+  // Pages are generated on-demand and cached (ISR at revalidate interval).
+  return [];
 }
 
 export async function generateMetadata({

@@ -83,8 +83,8 @@ function renderNode(node: LexicalNode, key: number | string): React.ReactNode {
         </p>
       );
 
-    case "heading":
-      const tag = (node.tag || "h2") as keyof JSX.IntrinsicElements;
+    case "heading": {
+      const tag = (node.tag || "h2") as keyof React.JSX.IntrinsicElements;
       const headingClasses: Record<string, string> = {
         h1: "text-3xl font-bold mb-6 mt-8",
         h2: "text-2xl font-bold mb-4 mt-6",
@@ -102,6 +102,7 @@ function renderNode(node: LexicalNode, key: number | string): React.ReactNode {
           {renderChildren(node.children)}
         </HeadingTag>
       );
+    }
 
     case "list":
       const ListTag = node.tag === "ol" ? "ol" : "ul";

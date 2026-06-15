@@ -6,6 +6,10 @@ import { GardenFeature } from "@/components/sections/GardenFeature";
 import { NewsletterBand } from "@/components/sections/NewsletterBand";
 import { AboutTeaser } from "@/components/sections/AboutTeaser";
 
+// Fetch data on-demand (not prerendered during build)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function Home() {
   return (
     <>

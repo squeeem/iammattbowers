@@ -3,6 +3,10 @@ import { getProjects } from "@/lib/payload";
 import Image from "next/image";
 import Link from "next/link";
 
+// Fetch data on-demand (not prerendered during build)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Building",
   description: "Home projects, documented one at a time.",

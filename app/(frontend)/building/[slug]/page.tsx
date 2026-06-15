@@ -4,11 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+// Revalidate static pages every hour
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
-  const projects = await getProjects();
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  // Skip static generation during build (no server running).
+  // Pages are generated on-demand and cached (ISR at revalidate interval).
+  return [];
 }
 
 export async function generateMetadata({
