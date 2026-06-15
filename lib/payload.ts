@@ -27,26 +27,48 @@ interface PayloadResponse<T> {
   nextPage: number | null;
 }
 
+function emptyResponse<T>(): PayloadResponse<T> {
+  return {
+    docs: [],
+    totalDocs: 0,
+    limit: 0,
+    totalPages: 0,
+    page: 1,
+    pagingCounter: 0,
+    hasPrevPage: false,
+    hasNextPage: false,
+    prevPage: null,
+    nextPage: null,
+  };
+}
+
 async function fetchAPI<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<PayloadResponse<T>> {
   const url = `${BASE_URL}/api${endpoint}`;
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-    // Cache SSG pages for 1 hour
-    next: { revalidate: 3600, ...options?.next },
-  });
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+      // Cache SSG pages for 1 hour
+      next: { revalidate: 3600, ...options?.next },
+    });
 
-  if (!res.ok) {
-    throw new Error(`Payload API error: ${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      throw new Error(`Payload API error: ${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+  } catch (err) {
+    // Don't let a transient CMS/DB hiccup take down the whole page. Log it and
+    // render an empty state — ISR will recover on the next successful revalidate.
+    console.error(`[payload] fetch failed for ${endpoint}:`, err);
+    return emptyResponse<T>();
   }
-
-  return res.json();
 }
 
 // Projects (Building)
