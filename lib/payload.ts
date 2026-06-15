@@ -104,6 +104,19 @@ export async function getPhotos(): Promise<Photo[]> {
 }
 
 // Posts (Enjoying)
+export interface LexicalNode {
+  type: string;
+  text?: string;
+  format?: number;
+  style?: string;
+  tag?: string;
+  url?: string;
+  target?: string;
+  rel?: string;
+  children?: LexicalNode[];
+  [key: string]: unknown;
+}
+
 export interface Post {
   id: string;
   title: string;
@@ -114,7 +127,7 @@ export interface Post {
   date: string;
   excerpt: string;
   coverImage?: { url: string; alt: string };
-  body?: { root: object }; // lexical JSON (native posts)
+  body?: { root: LexicalNode }; // lexical JSON (native posts)
   externalUrl?: string; // linkposts point here
   recipe?: {
     servings?: string;

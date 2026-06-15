@@ -3,6 +3,7 @@ import { getPost, getPosts } from "@/lib/payload";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LexicalRenderer } from "@/components/ui/LexicalRenderer";
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -94,6 +95,8 @@ export default async function PostPage({
             </p>
           </div>
 
+          {post.body && <LexicalRenderer body={post.body} />}
+
           {post.type === "recipe" && post.recipe && (
             <div className="bg-sand rounded-lg p-6 mb-8 border border-line">
               <h2 className="text-2xl font-bold text-ink mb-6">Ingredients</h2>
@@ -111,10 +114,6 @@ export default async function PostPage({
               </ul>
             </div>
           )}
-
-          <div className="text-center text-ink-soft text-sm">
-            [Full post body would render here — Lexical RTE content pending]
-          </div>
         </article>
       </div>
     </div>
